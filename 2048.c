@@ -24,11 +24,14 @@ int main()
     initialize_board();
     do
     {
+        get_rand_numbers();
         print_board();
         char ch = getch();
-        get_rand_numbers();
+
         process_input(ch);
     }while(board_empty());
+
+    printf("\nGame Over\n");
     return 0;
 }
 
@@ -172,16 +175,18 @@ void get_rand_numbers()
 
 int board_empty()
 {
-    int i,j;
+    int i,j,count;
     for(i=0; i<size; i++)
     {
         for(j=0; j<size; j++)
         {
-            if(board[i][j] != 0)
-                return 1;
+            if(board[i][j] == 0)
+                count++;
         }
     }
-    return 0;
+    if(count == 0)
+        return 0;
+    return 1;
 }
 
 void process_input(int ch)
