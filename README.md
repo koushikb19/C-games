@@ -3,7 +3,7 @@ Games in C
 
 A couple of games you can play.
 
-##Games Built
+## Games Built
 1.15-Puzzle
 2.2048
 
