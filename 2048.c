@@ -15,8 +15,10 @@ void add_up();
 void add_down();
 void add_right();
 void get_rand_numbers();
-int board_empty();
+int check_moves();
 void process_input();
+int check_extra_move();
+int check_left();
 
 int main()
 {
@@ -29,8 +31,8 @@ int main()
         char ch = getch();
 
         process_input(ch);
-    }while(board_empty());
-
+    }while(check_moves());
+    system("CLS");
     printf("\nGame Over\n");
     return 0;
 }
@@ -60,7 +62,7 @@ void print_board()
         }
         printf("\n");
     }
-    printf("\nPress 'W' for up\nPress 'S' for down\nPress 'A' for left\nPress 'D' for right");
+    printf("\nPress 'W' for up\nPress 'S' for down\nPress 'A' for left\nPress 'D' for right\nPress 'Q' to Quit the game");
 }
 
 void go_left()
@@ -122,8 +124,12 @@ void add_left()
                     {
                         board[i][k]+=board[i][j];
                         board[i][j]=0;
+                        stop_i=i;
+                        stop_j=k;
 
                     }
+                    else if(board[i][k]>0)
+                        break;
                 }
             }
         }
@@ -173,9 +179,9 @@ void get_rand_numbers()
     board[i][j] = 2;
 }
 
-int board_empty()
+int check_moves()
 {
-    int i,j,count;
+    int i,j,count=0;
     for(i=0; i<size; i++)
     {
         for(j=0; j<size; j++)
@@ -185,8 +191,9 @@ int board_empty()
         }
     }
     if(count == 0)
-        return 0;
-    return 1;
+        return check_extra_move();
+    else
+        return 1;
 }
 
 void process_input(int ch)
@@ -201,7 +208,47 @@ void process_input(int ch)
                     break;
         case 'd' : add_right();
                     break;
+        case 'q' : exit(0);
         default : printf("\n Invalid Input Try again\nPress any key to continue: ");
                     getch();
     }
+}
+
+int check_extra_move()
+{
+    int count=0;
+    if(check_left())
+        count++;
+    rotate_clock();
+    if(check_left())
+        count++;
+    rotate_clock();
+    if(check_left())
+        count++;
+    rotate_clock();
+    if(check_left())
+        count++;
+    rotate_clock();
+
+    if(count==0)
+        return 0;
+    else
+        return 1;
+}
+
+int check_left()
+{
+    int i,j,count=0;
+    for(i=0;i<size;i++)
+    {
+        for(j=1;j<size;j++)
+        {
+            if(board[i][j]==board[i][j-1])
+                count++;
+        }
+    }
+    if(count==0)
+        return 0;
+    else
+        return 1;
 }
