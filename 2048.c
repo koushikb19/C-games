@@ -8,17 +8,15 @@ int board[size][size];
 
 void initialize_board();
 void print_board();
-void go_left();
-void rotate_clock();
-void add_left();
-void add_up();
-void add_down();
-void add_right();
+void merge_left();
+void merge_right();
+void merge_up();
+void merge_down();
 void get_rand_numbers();
 int check_moves();
 void process_input();
 int check_extra_move();
-int check_left();
+
 
 int main()
 {
@@ -65,104 +63,160 @@ void print_board()
     printf("\nPress 'W' for up\nPress 'S' for down\nPress 'A' for left\nPress 'D' for right\nPress 'Q' to Quit the game");
 }
 
-void go_left()
+void merge_left()
 {
-    int i,j,k;
-    for(i=0;i<size;i++)
+    int stop_i=-1,stop_j=-1;
+    for(int i=0; i<size; i++)
     {
-        for(j=0;j<size;j++)
+        for(int j=0; j<size; j++)
         {
-            for(k=0;k<j;k++)
+            for(int k=j-1; k>=0; k--)
+            {
+
+                if((stop_i!=i || stop_j!=k) && board[i][k]==board[i][j])
+                {
+                    board[i][k]+=board[i][j];
+                    board[i][j]=0;
+                    stop_i=i;
+                    stop_j=k;
+                }
+
+
+                else if(board[i][k]>0)
+                    break;
+            }
+        }
+        for(int j=0; j<size; j++)
+        {
+            for(int k=0; k<j; k++)
             {
                 if(board[i][k]==0)
                 {
-                    board[i][k]=board[i][j];
+                    board[i][k]= board[i][j];
                     board[i][j]=0;
                 }
+
             }
         }
     }
 }
 
-void rotate_clock()
+
+
+void merge_right()
 {
-      int temp;
-
-  for (int i = 0; i < size; i++)
+    int stop_i=-1,stop_j=-1;
+    for(int i=0; i<size; i++)
     {
-        for (int j = i + 1; j < size; j++)
+        for(int j=size-1; j>=0; j--)
         {
-            temp = board[i][j];
-            board[i][j] = board[j][i];
-            board[j][i] = temp;
-        }
-    }
-
-    for (int i = 0; i < size; i++)
-    {
-        for (int j = 0; j < size / 2; j++)
-        {
-            temp = board[i][j];
-            board[i][j] = board[i][size - 1 - j];
-            board[i][size - 1 - j] = temp;
-        }
-      }
-}
-
-void add_left()
-{
-    int i,j,k,stop_i=-1,stop_j=-1;
-    for(i=0; i<size; i++)
-    {
-        for(j=0; j<size; j++)
-        {
-            for(k=j-1; k>=0; k--)
+            for(int k=j+1; k<size; k++)
             {
-                if(stop_i!=i || stop_j!=k)
-                {
-                    if(board[i][k]==board[i][j])
-                    {
-                        board[i][k]+=board[i][j];
-                        board[i][j]=0;
-                        stop_i=i;
-                        stop_j=k;
 
-                    }
-                    else if(board[i][k]>0)
-                        break;
+                if((stop_i!=i || stop_j!=k) && board[i][k]==board[i][j])
+                {
+                    board[i][k]+=board[i][j];
+                    board[i][j]=0;
+                    stop_i=i;
+                    stop_j=k;
                 }
+
+
+                else if(board[i][k]>0)
+                    break;
+            }
+        }
+        for(int j=size-1; j>=0; j--)
+        {
+            for(int k=size-1; k>j; k--)
+            {
+                if(board[i][k]==0)
+                {
+                    board[i][k]= board[i][j];
+                    board[i][j]=0;
+                }
+
             }
         }
     }
-    go_left();
 }
 
-void add_up()
+void merge_up()
 {
-    rotate_clock();
-    rotate_clock();
-    rotate_clock();
-    add_left();
-    rotate_clock();
+    int stop_i=-1,stop_j=-1;
+    for(int i=0; i<size; i++)
+    {
+        for(int j=0; j<size; j++)
+        {
+            for(int k=j-1; k>=0; k--)
+            {
+
+                if((stop_i!=i || stop_j!=k) && board[k][i]==board[j][i])
+                {
+                    board[k][i]+=board[j][i];
+                    board[j][i]=0;
+                    stop_i=i;
+                    stop_j=k;
+                }
+
+
+                else if(board[k][i]>0)
+                    break;
+            }
+        }
+        for(int j=0; j<size; j++)
+        {
+            for(int k=0; k<j; k++)
+            {
+                if(board[k][i]==0)
+                {
+                    board[k][i]= board[j][i];
+                    board[j][i]=0;
+                }
+
+            }
+        }
+    }
 }
 
-void add_down()
+void merge_down()
 {
-    rotate_clock();
-    add_left();
-    rotate_clock();
-    rotate_clock();
-    rotate_clock();
+    int stop_i=-1,stop_j=-1;
+    for(int i=0; i<size; i++)
+    {
+        for(int j=size-1; j>=0; j--)
+        {
+            for(int k=j+1; k<size; k++)
+            {
+
+                if((stop_i!=i || stop_j!=k) && board[k][i]==board[j][i])
+                {
+                    board[k][i]+=board[j][i];
+                    board[j][i]=0;
+                    stop_i=i;
+                    stop_j=k;
+                }
+
+
+                else if(board[i][k]>0)
+                    break;
+            }
+        }
+        for(int j=size-1; j>=0; j--)
+        {
+            for(int k=size-1; k>j; k--)
+            {
+                if(board[k][i]==0)
+                {
+                    board[k][i]= board[j][i];
+                    board[j][i]=0;
+                }
+
+            }
+        }
+    }
 }
 
-void add_right()
-{
-    rotate_clock();
-    rotate_clock();
-    add_left();
-    rotate_clock();
-    rotate_clock();
-}
 
 void get_rand_numbers()
 {
@@ -200,13 +254,13 @@ void process_input(int ch)
 {
     switch(ch)
     {
-        case 'w' : add_up();
+        case 'w' : merge_up();
                     break;
-        case 's' : add_down();
+        case 's' : merge_down();
                     break;
-        case 'a' : add_left();
+        case 'a' : merge_left();
                     break;
-        case 'd' : add_right();
+        case 'd' : merge_right();
                     break;
         case 'q' : exit(0);
         default : printf("\n Invalid Input Try again\nPress any key to continue: ");
@@ -214,29 +268,9 @@ void process_input(int ch)
     }
 }
 
+
+
 int check_extra_move()
-{
-    int count=0;
-    if(check_left())
-        count++;
-    rotate_clock();
-    if(check_left())
-        count++;
-    rotate_clock();
-    if(check_left())
-        count++;
-    rotate_clock();
-    if(check_left())
-        count++;
-    rotate_clock();
-
-    if(count==0)
-        return 0;
-    else
-        return 1;
-}
-
-int check_left()
 {
     int i,j,count=0;
     for(i=0;i<size;i++)
@@ -244,6 +278,32 @@ int check_left()
         for(j=1;j<size;j++)
         {
             if(board[i][j]==board[i][j-1])
+                count++;
+        }
+    }
+
+    for(i=0;i<size;i++)
+    {
+        for(j=size-2;j>=0;j--)
+        {
+            if(board[i][j]==board[i][j+1])
+                count++;
+        }
+    }
+    for(i=0;i<size;i++)
+    {
+        for(j=1;j<size;j++)
+        {
+            if(board[j][i]==board[j][i-1])
+                count++;
+        }
+    }
+
+    for(i=0;i<size;i++)
+    {
+        for(j=size-2;j>=0;j--)
+        {
+            if(board[j][i]==board[j][i+1])
                 count++;
         }
     }
