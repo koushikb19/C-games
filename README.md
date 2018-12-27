@@ -1,7 +1,12 @@
 # C-games
 Games in C
 
-Here is a puzzle game where you can arrange the numbers in order.
+A couple of games you can play.
+
+## Games Built
+1.15-Puzzle
+
+2.2048
 
 ### Programming language used:
 C
